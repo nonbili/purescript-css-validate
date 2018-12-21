@@ -1,0 +1,27 @@
+{
+  "name": "purescript-css-validate",
+  "description": "Validate CSS property and value pair",
+  "keywords": [
+    "purescript",
+    "css",
+    "validate"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nonbili/purescript-css-validate.git"
+  },
+  "license": "BSD-3-Clause",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^4.1.0"
+  },
+  "devDependencies": {
+    "purescript-jest": "^0.2.0",
+    "purescript-foldable-traversable": "^4.1.1"
+  }
+}
