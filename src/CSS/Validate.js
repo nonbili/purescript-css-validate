@@ -3,6 +3,8 @@ var syntax = csstree.lexer;
 
 exports.isDeclarationValid = function(property) {
   return function(value) {
+    if (!property.trim() || !value.trim()) return false;
+
     var valid = true;
     var declaration = property + ":" + value;
     var ast = csstree.parse(declaration, {

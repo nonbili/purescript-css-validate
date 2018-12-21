@@ -29,6 +29,12 @@ invalidColors =
 
 main :: Effect Unit
 main = do
+  test "empty string is invalid" $ do
+    expectToBeFalse $ isDeclarationValid "" ""
+    expectToBeFalse $ isDeclarationValid " " " "
+    expectToBeFalse $ isDeclarationValid "p" " "
+    expectToBeFalse $ isDeclarationValid " " "v"
+
   describe "Valid colors" $
     for_ validColors $ \color ->
       test color $
