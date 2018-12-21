@@ -1,7 +1,7 @@
 {
   "license": "BSD-3-Clause",
   "scripts": {
-    "test": "pulp build -I test && jest"
+    "test": "pulp build -I test -- +RTS -N2 -RTS && jest"
   },
   "devDependencies": {
     "css-tree": "^1.0.0-alpha.29",
