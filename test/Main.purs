@@ -19,7 +19,7 @@ validColors =
 
 invalidColors :: Array String
 invalidColors =
-  [ "random"
+  [ "random!"
   , "opaque"
   , "rgb(11, 22, )"
   , "rgba(111, 222, 333, 0.6, )"

@@ -7,12 +7,21 @@ exports.isDeclarationValid = function(property) {
 
     var valid = true;
     var declaration = property + ":" + value;
-    var ast = csstree.parse(declaration, {
-      context: "declaration",
-      onParseError: function() {
-        valid = false;
-      }
-    });
+    var ast;
+    try {
+      ast = csstree.parse(declaration, {
+        context: "declaration",
+        onParseError: function() {
+          valid = false;
+        }
+      });
+    } catch (e) {
+      valid = false;
+    }
+
+    if (!valid) {
+      return false;
+    }
 
     csstree.walk(ast, {
       visit: "Declaration",
