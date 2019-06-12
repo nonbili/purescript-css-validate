@@ -1,37 +1,69 @@
 var csstree = require("css-tree");
-var syntax = csstree.lexer;
+
+function parse(property, value, parseValue) {
+  var declaration = property + ":" + value;
+  var ast, error;
+  try {
+    ast = csstree.parse(declaration, {
+      context: "declaration",
+      parseValue: parseValue,
+      onParseError: function(e) {
+        error = e;
+      }
+    });
+  } catch (e) {
+    error = e;
+  }
+  return { ast: ast, error: error };
+}
+
+function walk(ast, validate) {
+  var match, decl;
+  csstree.walk(ast, {
+    visit: "Declaration",
+    enter: function(node) {
+      decl = node;
+      if (validate) {
+        match = csstree.lexer.matchDeclaration(node);
+      }
+    }
+  });
+  return { match: match, decl: decl };
+}
 
 exports.isDeclarationValid = function(property) {
   return function(value) {
-    if (!property.trim() || !value.trim()) return false;
+    var parsed = parse(property, value, true);
 
-    var valid = true;
-    var declaration = property + ":" + value;
-    var ast;
-    try {
-      ast = csstree.parse(declaration, {
-        context: "declaration",
-        onParseError: function() {
-          valid = false;
-        }
-      });
-    } catch (e) {
-      valid = false;
-    }
-
-    if (!valid) {
+    if (parsed.error) {
       return false;
     }
 
-    csstree.walk(ast, {
-      visit: "Declaration",
-      enter: function(node) {
-        var match = syntax.matchDeclaration(node);
-        if (match.error) {
-          valid = false;
-        }
-      }
-    });
-    return valid;
+    var walked = walk(parsed.ast, true);
+    if (walked.match && walked.match.error) {
+      return false;
+    }
+
+    return true;
   };
+};
+
+exports.parseDeclaration_ = function(left, right, property, value) {
+  var parsed = parse(property, value, false);
+
+  if (parsed.error) {
+    return left(parsed.error);
+  }
+
+  var walked = walk(parsed.ast, false);
+  if (walked.match && walked.match.error) {
+    return left(walked.match.error);
+  }
+
+  return right({
+    property: walked.decl.property,
+    value: walked.decl.value.value,
+    important: walked.decl.important,
+    valid: exports.isDeclarationValid(property)(value)
+  });
 };

@@ -18,10 +18,11 @@
     "output"
   ],
   "dependencies": {
-    "purescript-prelude": "^4.1.0"
+    "purescript-functions": "^4.0.0",
+    "purescript-exceptions": "^4.0.0"
   },
   "devDependencies": {
-    "purescript-jest": "^0.2.0",
+    "purescript-jest": "^0.3.0",
     "purescript-foldable-traversable": "^4.1.1"
   }
 }
