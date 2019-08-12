@@ -15,7 +15,7 @@ jobs:
       - run:
           command: |
             yarn add --dev bower purescript pulp
-            yarn bower install
+            git checkout -- package.json
 
       - save_cache:
           paths:

@@ -48,6 +48,22 @@ exports.isDeclarationValid = function(property) {
   };
 };
 
+exports.isClassNameValid = function(cls) {
+  let ast;
+  try {
+    ast = csstree.parse("." + cls, {
+      context: "selector",
+      parseValue: false,
+      onParseError: function() {
+        return false;
+      }
+    });
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
+
 exports.parseDeclaration_ = function(left, right, property, value) {
   var parsed = parse(property, value, false);
 

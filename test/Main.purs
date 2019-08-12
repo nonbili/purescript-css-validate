@@ -2,7 +2,7 @@ module Test.Main where
 
 import Prelude
 
-import CSS.Validate (isDeclarationValid, parseDeclaration)
+import CSS.Validate (isClassNameValid, isDeclarationValid, parseDeclaration)
 import Data.Bifunctor (lmap)
 import Data.Either (Either(..), isLeft)
 import Data.Foldable (for_)
@@ -29,8 +29,36 @@ invalidColors =
   , "hsla(111, 22%, 33%, 0.4, )"
   ]
 
+validClassNames :: Array String
+validClassNames =
+  [ "_abc"
+  , "-webkit"
+  , "container"
+  , "__internal__"
+  , "list3"
+  , "hover\\:list3"
+  ]
+
+invalidClassNames :: Array String
+invalidClassNames =
+  [ "*abc"
+  -- , "--webkit"
+  , "3list"
+  -- , "hover:list3"
+  ]
+
 main :: Effect Unit
 main = do
+  describe "Valid class names" $
+    for_ validClassNames $ \cls ->
+      test cls $
+        expectToBeTrue $ isClassNameValid cls
+
+  describe "Invalid class names" $
+    for_ invalidClassNames $ \cls ->
+      test cls $
+        expectToBeFalse $ isClassNameValid cls
+
   test "empty string is invalid" $ do
     expectToBeFalse $ isDeclarationValid "" ""
     expectToBeFalse $ isDeclarationValid " " " "
