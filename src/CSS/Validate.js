@@ -1,3 +1,5 @@
+// Adapted from https://github.com/csstree/validator
+
 var csstree = require("css-tree");
 
 function parse(property, value, parseValue) {
@@ -31,6 +33,8 @@ function walk(ast, validate) {
   return { match: match, decl: decl };
 }
 
+const syntaxErrors = ["SyntaxMatchError", "SyntaxReferenceError"];
+
 exports.isDeclarationValid = function(property) {
   return function(value) {
     var parsed = parse(property, value, true);
@@ -40,7 +44,13 @@ exports.isDeclarationValid = function(property) {
     }
 
     var walked = walk(parsed.ast, true);
-    if (walked.match && walked.match.error) {
+    // csstree doesn't parse custom properties, so ignoring other errors.
+    if (
+      walked.match &&
+      walked.match.error &&
+      syntaxErrors.includes(walked.match.error.name)
+    ) {
+      const err = walked.match.error;
       return false;
     }
 

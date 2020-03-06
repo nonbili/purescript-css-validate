@@ -109,3 +109,7 @@ main = do
         , important: false
         , valid: false
         }
+
+  test "isDeclarationValid should work for custom properties" $ do
+    expectToBeTrue $ isDeclarationValid "--primary" "blue"
+    expectToBeTrue $ isDeclarationValid "color" "var(--primary)"
